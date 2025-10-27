@@ -1,0 +1,20 @@
+name = "ai-chat-proxy"
+main = "cloudflare-worker.js"
+compatibility_date = "2024-01-01"
+
+# Environment variables (use wrangler secret for sensitive data)
+# Run: wrangler secret put OPENAI_API_KEY
+# Run: wrangler secret put WEBHOOK_URL (optional)
+
+# Optional: D1 Database for lead storage
+# Uncomment and configure if you want to store leads
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "ai-chat-leads"
+# database_id = "your-database-id"
+
+# Create the database first:
+# wrangler d1 create ai-chat-leads
+# Then create the tables:
+# wrangler d1 execute ai-chat-leads --command "CREATE TABLE leads (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, timestamp TEXT, created_at TEXT);"
+# wrangler d1 execute ai-chat-leads --command "CREATE TABLE conversations (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, message TEXT, model TEXT, created_at TEXT);"

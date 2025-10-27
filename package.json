@@ -1,0 +1,29 @@
+{
+  "name": "framer-ai-chat-component",
+  "version": "1.0.0",
+  "description": "A fully customizable AI chat component for Framer with lead generation and API proxy support",
+  "main": "AIChat.tsx",
+  "keywords": [
+    "framer",
+    "component",
+    "ai",
+    "chat",
+    "openai",
+    "chatgpt",
+    "lead-generation",
+    "cloudflare-worker"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "framer": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "deploy:worker": "cd cloudflare && wrangler deploy"
+  }
+}
