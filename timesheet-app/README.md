@@ -91,6 +91,14 @@ docker run -d -p 3000:3000 -v timesheets-data:/data \
 Then open `/admin`, sign in, upload your tracker spreadsheet, and send the crew
 the link shown at the bottom of that page.
 
+On a hosting dashboard such as Railway's **Variables** screen, type the value
+on its own, without quotes (`pick-something-long`, not `'pick-something-long'`).
+The app ignores stray quotes and spaces anyway. When it starts, the app's log
+says `Office password set from ADMIN_PASSWORD (N characters)`, which lets you
+check it was picked up. If the log instead says *"ADMIN_PASSWORD is not set"*,
+the variable didn't reach the app, and the temporary password it prints changes
+on every restart.
+
 ### Settings
 
 | Variable | Default | |

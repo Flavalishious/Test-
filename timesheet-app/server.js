@@ -13,15 +13,24 @@ const WORKBOOK = path.join(DATA_DIR, 'Employee_Timesheet_Tracker.xlsx');
 const BACKUPS = path.join(DATA_DIR, 'backups');
 const ARCHIVE = path.join(DATA_DIR, 'archive');
 const KEEP_BACKUPS = Number(process.env.KEEP_BACKUPS) || 50;
-const CREW_PIN = process.env.CREW_PIN || '';
+// Forgive the usual slips when pasting a setting into a host's dashboard:
+// surrounding spaces, or quotes copied from an example like ADMIN_PASSWORD='x'.
+function cleanSecret(v) {
+  const s = String(v || '').trim();
+  const m = /^(['"])(.*)\1$/.exec(s);
+  return (m ? m[2] : s).trim();
+}
+const CREW_PIN = cleanSecret(process.env.CREW_PIN);
 // 1 = Monday ... 7 = Sunday. Used when a new week starts automatically.
 const WEEK_END_DAY = Number(process.env.WEEK_END_DAY) || 5;
 const AUTO_NEW_WEEK = process.env.AUTO_NEW_WEEK !== 'false';
-let ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+let ADMIN_PASSWORD = cleanSecret(process.env.ADMIN_PASSWORD);
 
 if (!ADMIN_PASSWORD) {
   ADMIN_PASSWORD = crypto.randomBytes(6).toString('hex');
   console.warn(`ADMIN_PASSWORD is not set. Using a temporary one for this run: ${ADMIN_PASSWORD}`);
+} else {
+  console.log(`Office password set from ADMIN_PASSWORD (${[...ADMIN_PASSWORD].length} characters).`);
 }
 for (const d of [DATA_DIR, BACKUPS, ARCHIVE]) fs.mkdirSync(d, { recursive: true });
 
@@ -85,8 +94,18 @@ function safeEqual(a, b) {
   return crypto.timingSafeEqual(x, y);
 }
 
+// The office page URI-encodes the password so accented letters or symbols like
+// £ survive the trip in a header (browsers reject them raw).
+function headerSecret(req) {
+  try {
+    return decodeURIComponent(req.get('x-admin-password') || '').trim();
+  } catch {
+    return '';
+  }
+}
+
 function admin(req, res, next) {
-  if (safeEqual(req.get('x-admin-password') || '', ADMIN_PASSWORD)) return next();
+  if (safeEqual(headerSecret(req), ADMIN_PASSWORD)) return next();
   res.status(401).json({ error: 'Wrong admin password.' });
 }
 
@@ -113,7 +132,7 @@ app.get('/api/config', wrap(async (req, res) => {
 }));
 
 app.post('/api/submit', wrap(async (req, res) => {
-  if (CREW_PIN && !safeEqual(req.body?.pin || '', CREW_PIN)) {
+  if (CREW_PIN && !safeEqual(String(req.body?.pin || '').trim(), CREW_PIN)) {
     throw new W.UserError('Wrong crew PIN. Ask the office for the current PIN.', 401);
   }
   const result = await locked(async () => {

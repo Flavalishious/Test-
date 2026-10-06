@@ -10,8 +10,9 @@ const { buildTracker } = require('./fixture');
 
 const DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'timesheets-'));
 process.env.DATA_DIR = DATA_DIR;
-process.env.ADMIN_PASSWORD = 'office-secret';
-process.env.CREW_PIN = '4321';
+// Quotes and spaces as they'd arrive if pasted from the README into a dashboard.
+process.env.ADMIN_PASSWORD = " 'office-secret' ";
+process.env.CREW_PIN = '"4321" ';
 const app = require('../server');
 
 let base;
@@ -56,6 +57,15 @@ test('before upload the crew page reports not ready', async () => {
 test('admin endpoints need the password', async () => {
   const res = await fetch(`${base}/api/admin/week`, { headers: { 'x-admin-password': 'nope' } });
   assert.equal(res.status, 401);
+});
+
+test('admin password ignores pasted quotes and accepts the URI-encoded header', async () => {
+  const login = (pw) => fetch(`${base}/api/admin/login`, { method: 'POST', headers: { 'x-admin-password': pw } });
+  assert.equal((await login('office-secret')).status, 200);
+  assert.equal((await login(encodeURIComponent(' office-secret '))).status, 200);
+  assert.equal((await login('%6Fffice-secret')).status, 200); // %6F = "o"
+  assert.equal((await login("'office-secret'")).status, 401);
+  assert.equal((await login('%E0%A4%A')).status, 401); // malformed encoding
 });
 
 test('upload, submit, auto new week, mark entered, download', async () => {

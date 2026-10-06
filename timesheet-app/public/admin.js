@@ -9,7 +9,7 @@ let filter = 'all';
 async function api(path, opts = {}) {
   const res = await fetch(`api/admin/${path}`, {
     ...opts,
-    headers: { 'x-admin-password': password, ...(opts.body && !opts.raw ? { 'Content-Type': 'application/json' } : {}), ...opts.headers },
+    headers: { 'x-admin-password': encodeURIComponent(password), ...(opts.body && !opts.raw ? { 'Content-Type': 'application/json' } : {}), ...opts.headers },
     body: opts.raw || (opts.body ? JSON.stringify(opts.body) : undefined),
   });
   if (res.status === 401) {
@@ -191,7 +191,7 @@ async function start() {
 
 $('login').addEventListener('submit', async (e) => {
   e.preventDefault();
-  password = $('password').value;
+  password = $('password').value.trim();
   try {
     await api('login', { method: 'POST' });
     sessionStorage.setItem('ts.admin', password);
