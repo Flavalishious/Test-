@@ -7,8 +7,8 @@ COPY public ./public
 COPY server.js ./
 ENV NODE_ENV=production DATA_DIR=/data PORT=3000
 # The live spreadsheet, backups and archived weeks live here - mount a volume.
-RUN mkdir -p /data && chown node:node /data
-VOLUME /data
+# Runs as root inside the container because hosted volumes (e.g. Railway) are
+# mounted root-owned and a non-root user couldn't write the spreadsheet.
+RUN mkdir -p /data
 EXPOSE 3000
-USER node
 CMD ["node", "server.js"]
