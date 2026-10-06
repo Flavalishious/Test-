@@ -1,0 +1,19 @@
+{
+  "name": "site-timesheets",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mobile-friendly timesheet and job number entry for site crew that writes straight into the office Excel tracker",
+  "main": "server.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "express": "^5.1.0"
+  }
+}

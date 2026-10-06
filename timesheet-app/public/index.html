@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1f4e78">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Timesheets">
+  <title>Site Timesheets</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <h1>Site Timesheet</h1>
+    <p id="weekLabel">Loading…</p>
+  </header>
+
+  <main>
+    <div id="pending" class="msg warn" hidden></div>
+    <div id="notReady" class="msg bad" hidden>
+      Not set up yet. The office needs to upload the timesheet spreadsheet.
+    </div>
+
+    <form id="form" novalidate hidden>
+      <section class="card">
+        <h2>Who</h2>
+        <label for="employee">Your name</label>
+        <select id="employee" required>
+          <option value="">Choose your name…</option>
+        </select>
+        <div id="pinWrap" hidden>
+          <label for="pin">Crew PIN</label>
+          <input id="pin" type="password" inputmode="numeric" autocomplete="off" placeholder="From the office">
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>When</h2>
+        <div class="chips" id="dateChips" role="group" aria-label="Date worked">
+          <button type="button" class="chip" data-offset="0">Today</button>
+          <button type="button" class="chip" data-offset="-1">Yesterday</button>
+          <button type="button" class="chip" data-offset="pick">Other day</button>
+        </div>
+        <input id="date" type="date" required hidden aria-label="Date worked" style="margin-top:10px">
+        <p class="hint" id="dateLabel"></p>
+
+        <div class="row" style="margin-top:14px">
+          <div>
+            <label for="start">Start</label>
+            <input id="start" type="time" step="900" required>
+          </div>
+          <div>
+            <label for="finish">Finish</label>
+            <input id="finish" type="time" step="900" required>
+          </div>
+        </div>
+
+        <label>Break</label>
+        <div class="chips" id="breakChips" role="group" aria-label="Break length">
+          <button type="button" class="chip" data-mins="0">None</button>
+          <button type="button" class="chip" data-mins="15">15m</button>
+          <button type="button" class="chip" data-mins="30">30m</button>
+          <button type="button" class="chip" data-mins="45">45m</button>
+          <button type="button" class="chip" data-mins="60">1h</button>
+        </div>
+
+        <div class="total"><span>Hours worked</span><strong id="dayTotal">–</strong></div>
+      </section>
+
+      <section class="card">
+        <h2>Jobs</h2>
+        <div class="job-head"><span>Job number</span><span>Hours</span><span></span></div>
+        <div id="jobs"></div>
+        <p id="allocated" class="allocated"></p>
+        <div id="recentWrap" hidden>
+          <p class="hint" style="margin:0 0 8px">Recent jobs – tap to add</p>
+          <div class="chips" id="recent"></div>
+        </div>
+        <button type="button" class="btn" id="addJob" style="margin-top:14px">+ Add another job</button>
+        <datalist id="jobList"></datalist>
+      </section>
+
+      <section class="card">
+        <h2>Notes <span style="text-transform:none;letter-spacing:0">(optional)</span></h2>
+        <textarea id="notes" maxlength="500" placeholder="e.g. rain stopped work at 2, travel to depot"></textarea>
+      </section>
+
+      <div id="error" class="msg bad" role="alert" hidden></div>
+
+      <div class="bar"><div class="inner">
+        <button class="btn primary big" id="submit" type="submit">Send timesheet</button>
+      </div></div>
+    </form>
+
+    <section id="done" class="card done" hidden aria-live="polite">
+      <div class="tick" id="doneTick">✓</div>
+      <h2 id="doneTitle">Timesheet sent</h2>
+      <p id="doneText" class="hint"></p>
+      <dl id="doneSummary"></dl>
+      <button class="btn primary big" id="another" type="button">Enter another day</button>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

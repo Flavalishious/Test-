@@ -1,0 +1,3 @@
+node_modules/
+# Live spreadsheet, backups and archives contain staff names and hours - never commit
+data/
