@@ -326,3 +326,11 @@ Built for the Framer community. For support, please open an issue on GitHub.
 ---
 
 **Note**: This component requires an OpenAI API key to function. Users are responsible for their own API usage and costs.
+
+---
+
+## Also in this repo: Site Timesheets
+
+[`timesheet-app/`](timesheet-app/) is a separate, mobile-friendly app where site crew
+enter their hours and job numbers, written straight into the office's Excel
+timesheet tracker. See its [README](timesheet-app/README.md).

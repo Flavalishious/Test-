@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1f4e78">
+  <meta name="robots" content="noindex">
+  <title>Timesheets Office</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body style="padding-bottom:24px">
+  <header class="top">
+    <h1>Timesheets – Office</h1>
+    <p id="weekLabel">Sign in to continue</p>
+  </header>
+
+  <main>
+    <form id="login" class="card" novalidate>
+      <h2>Sign in</h2>
+      <label for="password">Office password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <div id="loginError" class="msg bad" hidden></div>
+      <button class="btn primary" style="margin-top:14px">Sign in</button>
+    </form>
+
+    <div id="app" hidden>
+      <div id="flash" class="msg" role="status" hidden></div>
+
+      <section class="card" id="setup" hidden>
+        <h2>First-time setup</h2>
+        <p>Upload your <b>Employee Timesheet Tracker.xlsx</b>. The crew list comes from column A of the
+          “Timesheet Tracker” sheet.</p>
+      </section>
+
+      <section class="card" id="overview" hidden>
+        <h2>This week</h2>
+        <div class="stats">
+          <div class="stat"><b id="nNotSent">0</b><span>Not sent</span></div>
+          <div class="stat"><b id="nReceived">0</b><span>To enter</span></div>
+          <div class="stat"><b id="nEntered">0</b><span>Entered</span></div>
+        </div>
+        <div class="chips" id="filters" style="margin-top:14px" role="group" aria-label="Filter">
+          <button type="button" class="chip small" data-f="all" aria-pressed="true">All</button>
+          <button type="button" class="chip small" data-f="Received - Not Entered" aria-pressed="false">To enter</button>
+          <button type="button" class="chip small" data-f="Not Sent" aria-pressed="false">Not sent</button>
+        </div>
+        <div id="days"></div>
+      </section>
+
+      <section class="card stack">
+        <h2>Spreadsheet</h2>
+        <button class="btn primary" id="download" type="button">Download latest spreadsheet</button>
+        <label for="upload">Upload spreadsheet</label>
+        <input id="upload" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        <p class="hint">Upload replaces the live copy (a backup is kept). Use it for first-time setup, or after
+          editing the file in Excel – e.g. to change the crew list or add job numbers on the “Jobs” sheet.
+          Times sent in between your download and upload would be lost, so upload soon after downloading.</p>
+      </section>
+
+      <section class="card stack" id="weekCard" hidden>
+        <h2>Start a new week</h2>
+        <p class="hint" style="margin-top:0">Happens automatically when the first timesheet for a new week comes in.
+          Use this to start one early or to fix the week-ending date. The current week is archived first.</p>
+        <label for="weekEnd">Week ending</label>
+        <input id="weekEnd" type="date">
+        <button class="btn" id="newWeek" type="button">Archive this week &amp; start new week</button>
+      </section>
+
+      <section class="card" id="archiveCard" hidden>
+        <h2>Past weeks</h2>
+        <ul class="archives" id="archives"></ul>
+      </section>
+
+      <section class="card links">
+        <h2>Crew link</h2>
+        <p>Send this to the crew. On their phone: open it, then <b>Share → Add to Home Screen</b>.</p>
+        <p><a id="crewLink" href="./"></a></p>
+      </section>
+    </div>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>
